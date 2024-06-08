@@ -1,0 +1,84 @@
+<mat-toolbar>
+  <span class="text-center">Todo List </span>
+</mat-toolbar>
+<div class="container">
+  <div class="row">
+    <div class="col-12 ">
+      <div class="row my-3 mx-3">
+        <div class="col-12 justify-content-center d-flex">
+          <mat-form-field class="example-form-field mx-3">
+            <mat-label>Tarefa:</mat-label>
+            <input matInput type="text" [(ngModel)]="valorDigitado" />
+          </mat-form-field>
+
+          <mat-form-field class="example-form-field">
+            <mat-label>Responsável:</mat-label>
+            <input matInput type="text" [(ngModel)]="valorResponsavel" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          @for(tarefa of tarefas; track tarefa.id){
+          <mat-card class="mb-3">
+            <mat-card-content>
+              <li>
+                {{ tarefa.titulo }}
+                <button
+                  mat-button
+                  color="accent"
+                  matTooltip="Remover tarefa"
+                  (click)="remover(tarefa)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <button
+                  mat-button
+                  color="primary"
+                  matTooltip="Editar tarefa"
+                  (click)="editar(tarefa)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+
+                @for (responsavel of tarefa.responsaveis; track responsavel) {
+                <mat-form-field class="example-form-field ms-3">
+                  <mat-label>Responsáveis</mat-label>
+                  <mat-chip-grid #chipGrid aria-label="Enter keywords">
+                    @for(responsavel of tarefa.responsaveis; track responsavel)
+                    {
+                    <mat-chip-row (removed)="removeResponsavel(responsavel)">
+                      {{ responsavel.nome }}
+                      <button matChipRemove aria-label="'remove ' + keyword">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-chip-row>
+                    }
+                  </mat-chip-grid>
+                  <input
+                    placeholder="New keyword..."
+                    [matChipInputFor]="chipGrid"
+                    (matChipInputTokenEnd)="add($event)"
+                    [(ngModel)]="valorResponsavel"
+                  />
+                </mat-form-field>
+
+                }
+              </li>
+            </mat-card-content>
+          </mat-card>
+
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 justify-content-center d-flex">
+          <button mat-stroked-button color="primary" class="w-25" (click)="salvar()">
+            salvar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

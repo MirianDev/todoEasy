@@ -1,0 +1,7 @@
+.calcTela{
+  padding-top: calc(70% - 0.5px)!important;
+  left: 25%!important;
+}
+.titulo{
+  font-size: 3em;
+}
