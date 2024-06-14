@@ -1,18 +1,20 @@
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialModule } from '../../material.module';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { EditarComponent } from './components/modals/editarTarefa/editarTarefa.component';
-import { Responsavel } from './models/responsavel';
+import { Responsavel } from './models/responsavel.model';
 import { TodoModel } from './models/todo.model';
 
 @Component({
   selector: 'app-todo',
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.css'],
-  imports: [MaterialModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, MaterialModule, FormsModule, ReactiveFormsModule,],
   standalone: true
 })
 
@@ -23,24 +25,20 @@ export class TodoComponent implements OnInit {
   valorDigitado: string = '';
   valorResponsavel: string = '';
 
-
+  done: TodoModel[] = [];
   announcer = inject(LiveAnnouncer);
 
   constructor(public dialog: MatDialog,) { }
 
   editar(linha: TodoModel) {
-    debugger
     const dialogRef = this.dialog.open(EditarComponent, {
       width: "30%",
       height: "30%",
       data: linha,
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   remover(linha: TodoModel) {
     const index = this.tarefas.indexOf(linha);
@@ -58,7 +56,9 @@ export class TodoComponent implements OnInit {
     //    this.announcer.announce(`removed ${responsavelRemover}`);
     // }
   }
-  salvar() {
+  salvar(todo: TodoModel[]) {
+
+
     const tarefaId = this.tarefas.length + 1;
     const responsavelId = this.tarefas.length + 1;
     const responsavelObjt = new Responsavel(this.valorResponsavel, responsavelId);
@@ -70,7 +70,7 @@ export class TodoComponent implements OnInit {
     this.tarefas.push(tarefa);
 
     this.valorDigitado = '';
-    this.valorResponsavel='';
+    this.valorResponsavel = '';
   }
 
 
@@ -84,5 +84,19 @@ export class TodoComponent implements OnInit {
     event.chipInput!.clear();
 
   }
+
+  drop(event: CdkDragDrop<TodoModel[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+
 }
 

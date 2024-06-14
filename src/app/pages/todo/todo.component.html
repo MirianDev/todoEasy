@@ -1,29 +1,81 @@
-<mat-toolbar>
-  <span class="text-center">Todo List </span>
+<mat-toolbar class="bgToolbar">
+  <span class="text-center"> Meu todo </span>
 </mat-toolbar>
 <div class="container">
   <div class="row">
-    <div class="col-12 ">
-      <div class="row my-3 mx-3">
-        <div class="col-12 justify-content-center d-flex">
-          <mat-form-field class="example-form-field mx-3">
-            <mat-label>Tarefa:</mat-label>
-            <input matInput type="text" [(ngModel)]="valorDigitado" />
-          </mat-form-field>
+    <div class="col-12">
+      <!--mdnjwh-->
 
-          <mat-form-field class="example-form-field">
-            <mat-label>Responsável:</mat-label>
-            <input matInput type="text" [(ngModel)]="valorResponsavel" />
-          </mat-form-field>
-        </div>
+      <!--mdnjwh-->
+      <div class="row my-3 mx-3">
+        <mat-card>
+          <mat-card-subtitle  class=" my-2 justify-content-center d-flex">Adicionar nova tarefa</mat-card-subtitle>
+
+          <mat-card-header class="justify-content-center d-flex">
+            <mat-card-title >
+
+                <mat-form-field class="example-form-field mx-3">
+                  <mat-label>Tarefa:</mat-label>
+                  <input matInput type="text" [(ngModel)]="valorDigitado" />
+                </mat-form-field>
+
+                <mat-form-field class="example-form-field">
+                  <mat-label>Responsável:</mat-label>
+                  <input matInput type="text" [(ngModel)]="valorResponsavel" />
+                </mat-form-field>
+
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-actions class="justify-content-center d-flex">
+
+                <button
+                  mat-stroked-button
+                  color="primary"
+                  class="w-25"
+                  (click)="salvar(tarefas)"
+                >
+                  salvar
+                </button>
+
+          </mat-card-actions>
+        </mat-card>
+
+
       </div>
-      <div class="row">
-        <div class="col-12">
-          @for(tarefa of tarefas; track tarefa.id){
-          <mat-card class="mb-3">
-            <mat-card-content>
-              <li>
-                {{ tarefa.titulo }}
+
+      <div class="example-container">
+        <h2 class="text-center colorText">Tarefas</h2>
+
+        <div
+          cdkDropList
+          #todoList="cdkDropList"
+          [cdkDropListData]="tarefas"
+          [cdkDropListConnectedTo]="[doneList]"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (tarefa of tarefas; track tarefa) {
+          <div class="example-box" cdkDrag>
+            <mat-card style="width: 200px">
+              <mat-card-header>
+                <mat-card-title>{{ tarefa.titulo }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @for(responsavel of tarefa.responsaveis; track responsavel){
+                <mat-chip class="example-box"
+                  >{{ responsavel.nome }}
+                  <button
+                    matChipRemove
+                    aria-label="'remove ' + keyword"
+                    (click)="removeResponsavel(responsavel)"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button></mat-chip
+                >
+                }
+              </mat-card-content>
+              <mat-card-actions>
                 <button
                   mat-button
                   color="accent"
@@ -41,42 +93,66 @@
                 >
                   <mat-icon>edit</mat-icon>
                 </button>
-
-                @for (responsavel of tarefa.responsaveis; track responsavel) {
-                <mat-form-field class="example-form-field ms-3">
-                  <mat-label>Responsáveis</mat-label>
-                  <mat-chip-grid #chipGrid aria-label="Enter keywords">
-                    @for(responsavel of tarefa.responsaveis; track responsavel)
-                    {
-                    <mat-chip-row (removed)="removeResponsavel(responsavel)">
-                      {{ responsavel.nome }}
-                      <button matChipRemove aria-label="'remove ' + keyword">
-                        <mat-icon>cancel</mat-icon>
-                      </button>
-                    </mat-chip-row>
-                    }
-                  </mat-chip-grid>
-                  <input
-                    placeholder="New keyword..."
-                    [matChipInputFor]="chipGrid"
-                    (matChipInputTokenEnd)="add($event)"
-                    [(ngModel)]="valorResponsavel"
-                  />
-                </mat-form-field>
-
-                }
-              </li>
-            </mat-card-content>
-          </mat-card>
-
+              </mat-card-actions>
+            </mat-card>
+          </div>
           }
         </div>
       </div>
-      <div class="row">
-        <div class="col-12 justify-content-center d-flex">
-          <button mat-stroked-button color="primary" class="w-25" (click)="salvar()">
-            salvar
-          </button>
+
+      <div class="example-container">
+        <h2 class="text-center colorText">Tarefas feitas</h2>
+
+        <div
+          cdkDropList
+          #doneList="cdkDropList"
+          [cdkDropListData]="done"
+          [cdkDropListConnectedTo]="[todoList]"
+          class="example-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          @for (item of done; track item) {
+          <div class="example-box" cdkDrag>
+            <mat-card style="width: 200px">
+              <mat-card-header>
+                <mat-card-title>{{ item.titulo }}</mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                @for(responsavel of item.responsaveis; track responsavel){
+                <mat-chip class="example-box"
+                  >{{ responsavel.nome }}
+                  <button
+                    matChipRemove
+                    aria-label="'remove ' + keyword"
+                    (click)="removeResponsavel(responsavel)"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button></mat-chip
+                >
+                }
+              </mat-card-content>
+              <mat-card-actions>
+                <button
+                  mat-button
+                  color="accent"
+                  matTooltip="Remover tarefa"
+                  (click)="remover(item)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+
+                <button
+                  mat-button
+                  color="primary"
+                  matTooltip="Editar tarefa"
+                  (click)="editar(item)"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+          }
         </div>
       </div>
     </div>

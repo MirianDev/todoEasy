@@ -2,14 +2,49 @@
   <div class="row">
     <div class="col-12">
       <div class="row">
-        <div class="col-12">
-
-        </div>
+        <div class="col-12"></div>
       </div>
-
-
-      <input type="text" placeholder="editar tarefa" class="my-5" [(ngModel)]="valorDigitado">
-      <button (click)="salvarAlteracao()">Salvar</button>
+      <input
+        type="text"
+        placeholder="editar tarefa"
+        class="my-5"
+        [(ngModel)]="valorDigitado"
+        tabindex="-1"
+      />
     </div>
+    <div>
+      <mat-form-field class="example-chip-list" >
+        <mat-label>Outros responsaveis</mat-label>
+        <mat-chip-grid #chipGrid aria-label="Enter responsaveis">
+          @for (responsable of copiaTarefa.responsaveis; track $index) {
+          <!-- @for(responsavel of tarefa.responsaveis; track responsavel){ -->
+          <mat-chip-row
+            (removed)="remove(responsable)"
+            [editable]="true"
+            (edited)="edit(responsable, $event)"
+            [aria-description]="'press enter to edit ' + responsable.nome"
+          >
+            {{ responsable.nome }}
+            <button
+              matChipRemove
+              [attr.aria-label]="'remove ' + responsable.nome"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip-row>
+          }
+          <input
+            placeholder="New fruit..."
+            tabindex="-1"
+            [matChipInputFor]="chipGrid"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            [matChipInputAddOnBlur]="addOnBlur"
+            (matChipInputTokenEnd)="add($event)"
+          />
+        </mat-chip-grid>
+      </mat-form-field>
+    </div>
+
+    <button (click)="salvarAlteracao()">Salvar</button>
   </div>
 </div>

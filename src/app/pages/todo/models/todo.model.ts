@@ -1,4 +1,4 @@
-import { Responsavel } from "./responsavel";
+import { Responsavel } from "./responsavel.model";
 
 export class TodoModel {
   constructor(
