@@ -24,7 +24,7 @@ export class TodoComponent implements OnInit {
   tarefas: TodoModel[] = [];
   valorDigitado: string = '';
   valorResponsavel: string = '';
-
+t!:TodoModel;
   done: TodoModel[] = [];
   announcer = inject(LiveAnnouncer);
 
@@ -49,12 +49,11 @@ export class TodoComponent implements OnInit {
 
 
   removeResponsavel(responsavelRemover: Responsavel) {
-    // const index = this.vResponsavel.indexOf(responsavelRemover);
-    // if (index >= 0) {
-    //   this.vResponsavel.splice(index, 1);
+    const index = this.t.responsaveis.indexOf(responsavelRemover);
+    if (index >= 0) {
+      this.t.responsaveis.splice(index, 1);
 
-    //    this.announcer.announce(`removed ${responsavelRemover}`);
-    // }
+    }
   }
   salvar(todo: TodoModel[]) {
 
