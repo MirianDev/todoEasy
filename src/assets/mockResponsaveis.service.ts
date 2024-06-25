@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Responsavel } from '../app/pages/todo/models/responsavel.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MockResponsaveisService {
 
- private Resposaveis = [
+ public static Responsaveis: Responsavel[] = [
     {
       nome: "Ana Silva",
       responsaveisId: 1

@@ -32,8 +32,8 @@ export class EditarComponent implements OnInit {
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
   addOnBlur = true;
-  valorDigitado: string = '';
-  copiaTarefa = JSON.parse(JSON.stringify(this.data)) as TodoModel;
+  tarefaDigitada: string = '';
+  copiaTarefa = JSON.parse(JSON.stringify(this.data)) as TodoModel;// copia a tarefa para nao alterar a tarefa original
 
   constructor(
     public dialogRef: MatDialogRef<EditarComponent>,
@@ -41,39 +41,33 @@ export class EditarComponent implements OnInit {
 
   }
 
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
+  adicionarChipsResponsavel(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();//.trim() tira os espacos em branco
     if (value) {
-      const idResponsavel = this.copiaTarefa.responsaveis.length + 1;
-
-      this.copiaTarefa.responsaveis.push({ nome: value, responsaveisId: idResponsavel });
+      const idResponsavel = this.copiaTarefa.responsaveis.length + 1;// busca o id do responsavel mais proximo
+      this.copiaTarefa.responsaveis.push({ nome: value, responsaveisId: idResponsavel });//cria o responsavel no array com o nome e o id
     }
-
-    // Clear the input value
-    event.chipInput!.clear();
+    event.chipInput!.clear(); //limpa o campo
   }
 
   edit(responsable: Responsavel, event: MatChipEditedEvent) {
-    const value = event.value.trim();
+    const value = event.value.trim();//.trim() tira os espacos em branco
 
     if (!value) {
-      this.remove(responsable);
+      this.remove(responsable);// se o valor estiver vazio remove o responsavel
       return;
     }
 
-    const index = this.copiaTarefa.responsaveis.indexOf(responsable);
-
+    const index = this.copiaTarefa.responsaveis.indexOf(responsable); //busca o responsavel no array
     if (index >= 0) {
-      this.copiaTarefa.responsaveis[index].nome = value;
+      this.copiaTarefa.responsaveis[index].nome = value;//atualiza o responsavel no array
     }
   }
 
   ngOnInit() { }
 
   remove(responsable: Responsavel): void {
-    const index = this.copiaTarefa.responsaveis.indexOf(responsable);
+    const index = this.copiaTarefa.responsaveis.indexOf(responsable); //busca o responsavel no array
 
     if (index >= 0) {
       this.copiaTarefa.responsaveis.splice(index, 1);
@@ -81,9 +75,11 @@ export class EditarComponent implements OnInit {
   }
 
   salvarAlteracao() {
-    this.data.responsaveis = this.copiaTarefa.responsaveis;
-    this.data.titulo = this.copiaTarefa.titulo;
+
+    this.data.responsaveis = this.copiaTarefa.responsaveis; //atualiza os responsaveis no array da tarefa
+    this.data.titulo = this.copiaTarefa.titulo;//atualiza o titulo da tarefa
 
     this.dialogRef.close();
+
   }
 }

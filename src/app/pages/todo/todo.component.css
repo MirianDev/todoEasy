@@ -26,9 +26,11 @@ color: midnightblue;
   overflow: hidden;
   display: block;
 }
-
+.mat-mdc-chip.mat-mdc-standard-chip{
+  --mdc-chip-container-height: 25px;
+}
 .example-box {
-  padding: 20px 10px;
+  padding: 4px 4px;
  /*  border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   display: flex;
